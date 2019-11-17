@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include "Mensaje.h"
+#include "Constantes.h"
 
 int validar_parametro(char* str) {
     stringstream strValue;
@@ -12,43 +13,60 @@ int validar_parametro(char* str) {
     return intValue;
 }
 
-int main (int argc, char* argv[]){
-    if (argc != 4) {
+int main (int argc, char* argv[])
+{
+    if (argc != 4)
+    {
         cout<<"Uso: "<<argv[0]<<" <nombre> <piso_actual> <prox_piso>"<<endl;
         return 1;
     }
-    sv_sem sem_llamado("semLlamado");
-    sv_sem sem_ocupado("semOcupado");
-    sv_sem sem_leer("semLectura");
-    sv_sem sem_escribir("semEscritura");
+
+    sv_sem sem_llamado(SEM_LLAMADO);
+    sv_sem sem_ocupado(SEM_OCUPADO);
+    sv_sem sem_leer_ascensor(SEM_LECTURA_ASCENSOR);
+    sv_sem sem_leer_pasajero(SEM_LECTURA_PASAJERO);
     Mensaje * msj;
-    sv_shm area("area");
-    msj=reinterpret_cast<Mensaje *> (area.map(BUFSIZ));
+    sv_shm area(AREA);
+    msj = reinterpret_cast<Mensaje *>(area.map(BUFSIZ));
+
+    // Espero a que desocupe para llamarlo
     sem_ocupado.wait();
-    cout<< "El ascensor fue llamado"<<endl;
-    sem_escribir.wait();
+
+    // Ingreso los datos del viaje en el area compartida
     int piso_pasajero = validar_parametro(argv[2]);
     int prox_piso = validar_parametro(argv[3]);
-    msj->setPisoPasajero(piso_pasajero);
-    msj->setProxPiso(prox_piso);
-    sem_leer.post();
-    sem_leer.wait();
-    int piso_ascensor=msj->getPisoAscensor();
-    for (int i= abs(piso_pasajero-piso_ascensor); i>0; i--) {
-        sem_leer.wait();
-        piso_ascensor = msj->getPisoAscensor();
+    msj->piso_pasajero = piso_pasajero;
+    msj->prox_piso = prox_piso;
+    sem_leer_ascensor.post();
+
+    // Lo llamo
+    sem_llamado.post();
+    cout << "El ascensor fue llamado" << endl;
+
+    // Espero datos del ascensor
+    sem_leer_pasajero.wait();
+    int piso_ascensor=msj->piso_ascensor;
+
+    while (piso_ascensor != piso_pasajero)
+    {
         cout<<"El ascensor esta en el piso: "<<piso_ascensor<<endl;
-        sem_escribir.post();
+        sem_leer_ascensor.post();
+        sem_leer_pasajero.wait();
+        piso_ascensor=msj->piso_ascensor;
         usleep(500);
     }
-    cout<< "El ascensor llego al piso del pasajero"<<endl;
+
+    cout << "El ascensor llego al piso del pasajero" << endl;
+    sem_leer_ascensor.post();
+
     for (int i=abs(piso_pasajero-prox_piso); i>0; i--) {
-        sem_leer.wait();
-        piso_ascensor = msj->getPisoAscensor();
+        sem_leer_pasajero.wait();
+        piso_ascensor = msj->piso_ascensor;
         cout<<"El ascensor esta en el piso: "<<piso_ascensor<<endl;
-        sem_escribir.post();
+        sem_leer_ascensor.post();
         usleep(500);
     }
-    cout<< "El ascensor dejo al pasajero en el piso: "<<prox_piso<<endl;
+    cout << "El ascensor dejo al pasajero en el piso: " << prox_piso << endl;
+    
     return 0;
 } 

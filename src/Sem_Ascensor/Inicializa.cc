@@ -3,17 +3,20 @@
 #include <iostream>
 #include <sstream>
 #include "Mensaje.h"
+#include "Constantes.h"
 
-int main (int argc, char* argv[]){
-    sv_sem sem_llamado("semLlamado",0);
-    sv_sem sem_ocupado("semOcupado",1);
-    sv_sem sem_leer("semLectura",0);
-    sv_sem sem_escribir("semEscritura",1);
+int main (){
+    sv_sem sem_llamado(SEM_LLAMADO,0);
+    sv_sem sem_ocupado(SEM_OCUPADO,1);
+    sv_sem sem_leer_ascensor(SEM_LECTURA_ASCENSOR,0);
+    sv_sem sem_leer_pasajero(SEM_LECTURA_PASAJERO,0);
     cout<<"Semaforos inicializados"<<endl;
     Mensaje* msj;
-    sv_shm area("Area");
+    sv_shm area(AREA);
     cout<<"Area inicializada"<<endl;
-    msj= reinterpret_cast<Mensaje *> (area.map(sizeof (Mensaje)));
+    msj= reinterpret_cast<Mensaje*>(area.map(sizeof(Mensaje)));
+    msj -> continua_corriendo = true;    
+
     return 0;
 } 
 
