@@ -7,6 +7,7 @@
 using namespace std;
 
 int main(int argc, char * argv[]){
+    imprimir_padrones();
     sv_sem sem_llamado(SEM_LLAMADO);
     sv_sem sem_ocupado(SEM_OCUPADO);
     sv_sem sem_leer_ascensor(SEM_LECTURA_ASCENSOR);

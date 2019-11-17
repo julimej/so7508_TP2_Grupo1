@@ -15,3 +15,9 @@ void log_mensaje(string mensaje) {
     cout<<mensaje<<endl;
     cout<<"###############################"<<endl;
 }
+
+void imprimir_padrones() {
+    cout<<"Integrantes del grupo:"<<endl;
+    cout<<"\tLautaro Ituarte, 93639.\n\tJulian Mejliker, 100866.\n\tJoel Saidman, 99730."<<endl;
+    cout<<"###############################"<<endl;
+}

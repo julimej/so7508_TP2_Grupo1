@@ -16,6 +16,7 @@ int validar_parametro(char* str) {
 
 int main (int argc, char* argv[])
 {
+    imprimir_padrones();
     if (argc != 4)
     {
         cout<<"Uso: "<<argv[0]<<" <nombre> <piso_actual> <prox_piso>"<<endl;
@@ -42,6 +43,12 @@ int main (int argc, char* argv[])
     //Verifico que no quiera ir a su mismo piso
     if (piso_pasajero == prox_piso) {
         log_mensaje("Ya se encuentra en ese piso");
+        return 1;
+    }
+    
+    //Valido piso maximo
+    if (prox_piso>5) {
+        log_mensaje("El ascensor llega hasta el 5to piso");
         return 1;
     }
 
