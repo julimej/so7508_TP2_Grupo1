@@ -3,6 +3,7 @@
 #include "../Sem-sv/sv_shm.h"
 #include "Mensaje.h"
 #include "Constantes.h"
+#include "Utils.h"
 using namespace std;
 
 int main(int argc, char * argv[]){
@@ -17,7 +18,7 @@ int main(int argc, char * argv[]){
     while (true) {
         sem_llamado.wait();
         if (!msj->continua_corriendo) break;
-        cout<< "El ascensor fue llamado" << endl;
+        log_mensaje("El ascensor fue llamado");
         sem_leer_ascensor.wait();
         int piso_pasajero = msj->piso_pasajero;
         int piso_ascensor = msj->piso_ascensor;
@@ -26,12 +27,12 @@ int main(int argc, char * argv[]){
         for(int i= abs(piso_ascensor-piso_pasajero); i>0; i--) {            
             piso_ascensor+=incremento;
             msj->piso_ascensor = piso_ascensor;
-            cout << "El ascensor esta en el piso: " << piso_ascensor << endl;
+            log_mensaje("El ascensor esta en el piso: " + to_string(piso_ascensor));
             sem_leer_pasajero.post();
-            usleep(500);
+            usleep(ESPERA);
         }
 
-        cout << "El ascensor llego al piso del pasajero" << endl;
+        log_mensaje("El ascensor llego al piso del pasajero");
 
         int prox_piso = msj->prox_piso;
         incremento = (prox_piso>=piso_ascensor) ? 1 : -1;
@@ -39,16 +40,16 @@ int main(int argc, char * argv[]){
         for(int i= abs(prox_piso-piso_ascensor); i>0; i--) {
             piso_ascensor+=incremento;
             msj->piso_ascensor = piso_ascensor;
-            cout<< "El ascensor esta en el piso: "<<piso_ascensor<<endl;
+            log_mensaje("El ascensor esta en el piso: "+ to_string(piso_ascensor));
             sem_leer_pasajero.post();
-            usleep(500);
+            usleep(ESPERA);
         }
 
-        cout << "El ascensor dejo al pasajero en el piso: " << piso_ascensor << endl;
+        log_mensaje("El ascensor dejo al pasajero en el piso: " + to_string(piso_ascensor));
         sem_ocupado.post();
     }
 
-    cout << "Ascensor terminado." << endl;
+    log_mensaje("Ascensor terminado.");
 
     return 0;
 }

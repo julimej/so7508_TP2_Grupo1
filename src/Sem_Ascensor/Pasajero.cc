@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include "Mensaje.h"
+#include "Utils.h"
 #include "Constantes.h"
 
 int validar_parametro(char* str) {
@@ -37,11 +38,18 @@ int main (int argc, char* argv[])
     int prox_piso = validar_parametro(argv[3]);
     msj->piso_pasajero = piso_pasajero;
     msj->prox_piso = prox_piso;
+
+    //Verifico que no quiera ir a su mismo piso
+    if (piso_pasajero == prox_piso) {
+        log_mensaje("Ya se encuentra en ese piso");
+        return 1;
+    }
+
     sem_leer_ascensor.post();
 
     // Lo llamo
     sem_llamado.post();
-    cout << "El ascensor fue llamado" << endl;
+    log_mensaje("El ascensor fue llamado");
 
     // Ascensor llegando al piso que fue llamado
     sem_leer_pasajero.wait();
@@ -49,25 +57,25 @@ int main (int argc, char* argv[])
 
     while (piso_ascensor != piso_pasajero)
     {
-        cout<<"El ascensor esta en el piso: "<<piso_ascensor<<endl;
+        log_mensaje("El ascensor esta en el piso: "+ to_string(piso_ascensor));
         sem_leer_ascensor.post();
         sem_leer_pasajero.wait();
         piso_ascensor=msj->piso_ascensor;
-        usleep(500);
+        usleep(ESPERA);
     }
 
-    cout << "El ascensor llego al piso del pasajero" << endl;
+    log_mensaje("El ascensor llego al piso del pasajero");
     sem_leer_ascensor.post();
 
     // Ascensor llegando al piso destino
     for (int i=abs(piso_pasajero-prox_piso); i>0; i--) {
         sem_leer_pasajero.wait();
         piso_ascensor = msj->piso_ascensor;
-        cout<<"El ascensor esta en el piso: "<<piso_ascensor<<endl;
+        log_mensaje("El ascensor esta en el piso: " + to_string(piso_ascensor));
         sem_leer_ascensor.post();
-        usleep(500);
+        usleep(ESPERA);
     }
-    cout << "El ascensor dejo al pasajero en el piso: " << prox_piso << endl;
+    log_mensaje("El ascensor dejo al pasajero en el piso: " + to_string(prox_piso));
     
     return 0;
 } 
