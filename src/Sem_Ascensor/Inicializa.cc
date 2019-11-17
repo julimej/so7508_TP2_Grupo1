@@ -2,6 +2,7 @@
 #include "../Sem-sv/sv_shm.h"
 #include <iostream>
 #include <sstream>
+#include "Mensaje.h"
 
 int main (int argc, char* argv[]){
     if (argc != 2) {
@@ -15,7 +16,13 @@ int main (int argc, char* argv[]){
     unsigned int intValue;
     strValue >> intValue;
 
-    sv_sem mutex("Ascensor",intValue);
-    cout<< "Semaforo inicializado con capacidad: "<< intValue <<endl;
+    sv_sem capacidad("Capacidad",intValue);
+    sv_sem mutex("Mutex",1);
+    sv_sem entra("Entra",1);
+    cout<<"Semaforos inicializados"<<endl;
+    Mensaje* msj;
+    sv_shm area("Area");
+    msj= reinterpret_cast<Mensaje *> (area.map(sizeof (Mensaje)));
+    return 0;
 } 
 
