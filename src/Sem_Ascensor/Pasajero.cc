@@ -43,7 +43,7 @@ int main (int argc, char* argv[])
     sem_llamado.post();
     cout << "El ascensor fue llamado" << endl;
 
-    // Espero datos del ascensor
+    // Ascensor llegando al piso que fue llamado
     sem_leer_pasajero.wait();
     int piso_ascensor=msj->piso_ascensor;
 
@@ -59,6 +59,7 @@ int main (int argc, char* argv[])
     cout << "El ascensor llego al piso del pasajero" << endl;
     sem_leer_ascensor.post();
 
+    // Ascensor llegando al piso destino
     for (int i=abs(piso_pasajero-prox_piso); i>0; i--) {
         sem_leer_pasajero.wait();
         piso_ascensor = msj->piso_ascensor;

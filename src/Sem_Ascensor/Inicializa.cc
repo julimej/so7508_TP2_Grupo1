@@ -13,9 +13,9 @@ int main (){
     cout<<"Semaforos inicializados"<<endl;
     Mensaje* msj;
     sv_shm area(AREA);
-    cout<<"Area inicializada"<<endl;
     msj= reinterpret_cast<Mensaje*>(area.map(sizeof(Mensaje)));
     msj -> continua_corriendo = true;    
+    cout<<"Area inicializada"<<endl;
 
     return 0;
 } 
