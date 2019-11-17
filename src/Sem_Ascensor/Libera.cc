@@ -4,13 +4,15 @@
 using namespace std;
 
 int main(){
-    sv_sem capacidad("Capacidad",0);
-    sv_sem mutex("Mutex",1);
-    sv_sem entra("Entra",1);
     sv_shm area("Area");
-    capacidad.del();
-    mutex.del();
-    entra.del();
+    sv_sem sem_llamado("semLlamado");
+    sv_sem sem_ocupado("semOcupado");
+    sv_sem sem_leer("semLectura");
+    sv_sem sem_escribir("semEscritura");
+    sem_llamado.del();
+    sem_ocupado.del();
+    sem_leer.del();
+    sem_escribir.del();
     area.del();
     return 0;
 }

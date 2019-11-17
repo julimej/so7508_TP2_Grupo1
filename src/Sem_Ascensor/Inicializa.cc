@@ -5,23 +5,14 @@
 #include "Mensaje.h"
 
 int main (int argc, char* argv[]){
-    if (argc != 2) {
-        cout<<"Ingrese una capacidad valida para el ascensor";
-        return 0;
-    }
-
-    stringstream strValue;
-    strValue << argv[1];
-
-    unsigned int intValue;
-    strValue >> intValue;
-
-    sv_sem capacidad("Capacidad",intValue);
-    sv_sem mutex("Mutex",1);
-    sv_sem entra("Entra",1);
+    sv_sem sem_llamado("semLlamado",0);
+    sv_sem sem_ocupado("semOcupado",1);
+    sv_sem sem_leer("semLectura",0);
+    sv_sem sem_escribir("semEscritura",1);
     cout<<"Semaforos inicializados"<<endl;
     Mensaje* msj;
     sv_shm area("Area");
+    cout<<"Area inicializada"<<endl;
     msj= reinterpret_cast<Mensaje *> (area.map(sizeof (Mensaje)));
     return 0;
 } 

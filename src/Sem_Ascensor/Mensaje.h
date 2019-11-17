@@ -6,30 +6,44 @@ transmiten entre el ascensor y los pasajeros*/
 
 class Mensaje {
 private:
-    int piso_actual=0;
-    bool esta_lleno=false;
-    bool finalizo=false; 
+    int piso_ascensor=0;
+    int piso_pasajero=0;
+    int prox_piso=0;
+    bool continua_corriendo=true; 
 public:
     Mensaje()=default;
     ~Mensaje()=default;
 
-    int getPiso() { 
-        return this->piso_actual;
+    int getPisoPasajero() { 
+        return this->piso_pasajero;
     };
 
-    void setPiso(int piso) {
-        this->piso_actual = piso;
+    void setPisoPasajero(int piso) {
+        this->piso_pasajero = piso;
     };
 
-    bool getEstaLleno() { 
-        return this->esta_lleno;
+    int getProxPiso() { 
+        return this->prox_piso;
     };
 
-    void setEstaLleno(bool esta_lleno) {
-        this->esta_lleno=esta_lleno;
+    void setProxPiso(int piso) {
+        this->prox_piso = piso;
     };
+
+    int getPisoAscensor() { 
+        return this->piso_ascensor;
+    };
+
+    void setPisoAscensor(int piso) {
+        this->piso_ascensor = piso;
+    };
+    
+    bool estaCorriendo() {
+        return this->continua_corriendo;
+    }
+
     void finalizar() {
-        this->finalizo=true;
+        this->continua_corriendo=false;
     }
 };
 
