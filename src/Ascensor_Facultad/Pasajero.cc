@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 #include "Mensaje.h"
+#include "Utils.h"
 #include "Constantes.h"
 
 int validar_parametro(char* str) {
@@ -16,6 +17,7 @@ int validar_parametro(char* str) {
 
 int main (int argc, char* argv[])
 {
+    imprimir_padrones();
     if (argc != 4)
     {
         cout << "Uso: " << argv[0] << " <nombre> <piso_actual> <prox_piso>" << endl;
@@ -28,7 +30,6 @@ int main (int argc, char* argv[])
     edificio = reinterpret_cast<Edificio*>(area.map(BUFSIZ));
 
     Pasajero pasajero;
-    //pasajero.nombre = argv[1];
     pasajero.pisoActual = validar_parametro(argv[2]);
     pasajero.pisoDestino = validar_parametro(argv[3]);
 

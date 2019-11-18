@@ -4,8 +4,10 @@
 #include <sstream>
 #include "Mensaje.h"
 #include "Constantes.h"
+#include "Utils.h"
 
 int main (){
+    imprimir_padrones();
     sv_sem sem_llamado(SEM_LLAMADO,0);    
     cout<<"Semaforos inicializados"<<endl;
     Edificio* edificio;

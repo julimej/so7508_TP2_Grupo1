@@ -4,6 +4,7 @@
 #include "../Sem-sv/sv_shm.h"
 #include "Mensaje.h"
 #include "Constantes.h"
+#include "Utils.h"
 using namespace std;
 
 class Ascensor
@@ -61,6 +62,7 @@ void Ascensor::MoverAscensor()
         pisoActual--;
 
     cout << "================ PISO: " << pisoActual << "  ================" << endl;
+    log_tiempo();
 }
 
 void Ascensor::BajarPasajeros()
@@ -388,6 +390,7 @@ void Ascensor::BuscarProximoDestinoEnPisoInferior()
 
 int main(int argc, char * argv[])
 {    
+    imprimir_padrones();
     Ascensor ascensor;
 
     while (true)
