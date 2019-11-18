@@ -2,9 +2,11 @@
 #include  "../Sem-sv/sv_shm.h"
 #include  "Mensaje.h"
 #include "Constantes.h"
+#include "Utils.h"
 using namespace std;
 
 int main (){
+    imprimir_padrones();
     sv_shm area(AREA);
     sv_sem sem_llamado(SEM_LLAMADO);
     sv_sem sem_ocupado(SEM_OCUPADO);
