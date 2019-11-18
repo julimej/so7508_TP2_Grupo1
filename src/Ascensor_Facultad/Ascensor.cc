@@ -28,6 +28,10 @@ class Ascensor
     bool EstaSubiendo();
     int ObtenerCantidadPasajerosPisoActual();
     Pasajero* ObtenerPasajerosPisoActual();
+    void BuscarProximoDestino();
+    void BuscarProximoDestinoEnPiso(int piso);
+    void BuscarProximoDestinoEnPisoSuperior();
+    void BuscarProximoDestinoEnPisoInferior();
 };
 
 Ascensor::Ascensor() : sem_llamado(SEM_LLAMADO), area(AREA)
@@ -56,7 +60,7 @@ void Ascensor::MoverAscensor()
     else if (pisoDestino < pisoActual)
         pisoActual--;
 
-    cout << "El ascensor llego al piso " << pisoActual << endl;
+    cout << "================ PISO: " << pisoActual << "  ================" << endl;
 }
 
 void Ascensor::BajarPasajeros()
@@ -229,6 +233,126 @@ int Ascensor::ObtenerCantidadPasajerosPisoActual()
     }
 }
 
+void Ascensor::BuscarProximoDestino()
+{
+    cout << "Buscando próximo destino" << endl;
+
+    BuscarProximoDestinoEnPiso(pisoActual);
+
+    if (EstaSubiendo() && LlegoADestino())
+        BuscarProximoDestinoEnPisoSuperior();
+
+    if (!EstaSubiendo() && LlegoADestino())
+        BuscarProximoDestinoEnPisoInferior();
+}
+
+void Ascensor::BuscarProximoDestinoEnPiso(int piso)
+{
+    if (!LlegoADestino())
+        return;
+
+    switch (piso)
+    {
+        case 1:
+            if (edificio->cantPasajerosPiso1 > 0)
+            {
+                pisoDestino = edificio->pasajerosPiso1[0].pisoDestino;
+            }
+            break;
+
+        case 2:
+            if (edificio->cantPasajerosPiso2 > 0)
+            {
+                pisoDestino = edificio->pasajerosPiso2[0].pisoDestino;
+            }
+            break;
+
+        case 3:
+            if (edificio->cantPasajerosPiso3 > 0)
+            {
+                pisoDestino = edificio->pasajerosPiso3[0].pisoDestino;
+            }
+            break;
+
+        case 4:
+            if (edificio->cantPasajerosPiso4 > 0)
+            {
+                pisoDestino = edificio->pasajerosPiso4[0].pisoDestino;
+            }
+            break;
+
+        case 5:
+            if (edificio->cantPasajerosPiso5 > 0)
+            {
+                pisoDestino = edificio->pasajerosPiso5[0].pisoDestino;
+            }
+            break;
+        
+        default:
+            break;
+    }
+}
+void Ascensor::BuscarProximoDestinoEnPisoSuperior()
+{
+    switch (pisoActual)
+    {
+        case 1:
+            BuscarProximoDestinoEnPiso(2);
+            BuscarProximoDestinoEnPiso(3);
+            BuscarProximoDestinoEnPiso(4);
+            BuscarProximoDestinoEnPiso(5);
+            break;
+
+        case 2:
+            BuscarProximoDestinoEnPiso(3);
+            BuscarProximoDestinoEnPiso(4);
+            BuscarProximoDestinoEnPiso(5);
+            break;
+
+        case 3:
+            BuscarProximoDestinoEnPiso(4);
+            BuscarProximoDestinoEnPiso(5);
+            break;
+
+        case 4:
+            BuscarProximoDestinoEnPiso(5);
+            break;
+
+        default:
+            break;
+    }
+}
+void Ascensor::BuscarProximoDestinoEnPisoInferior()
+{
+    switch (pisoActual)
+    {
+        case 5:
+            BuscarProximoDestinoEnPiso(4);
+            BuscarProximoDestinoEnPiso(3);
+            BuscarProximoDestinoEnPiso(2);
+            BuscarProximoDestinoEnPiso(1);
+            break;
+
+        case 4:
+            BuscarProximoDestinoEnPiso(3);
+            BuscarProximoDestinoEnPiso(2);
+            BuscarProximoDestinoEnPiso(1);
+            break;
+
+        case 3:
+            BuscarProximoDestinoEnPiso(2);
+            BuscarProximoDestinoEnPiso(1);
+            break;
+
+        case 2:
+            BuscarProximoDestinoEnPiso(1);
+            break;
+
+        default:
+            break;
+    }
+}
+
 int main(int argc, char * argv[])
 {    
     Ascensor ascensor;
@@ -243,6 +367,9 @@ int main(int argc, char * argv[])
             ascensor.BajarPasajeros();
             ascensor.SubirPasajeros();
             sleep(2);
+
+            // if (ascensor.LlegoADestino())
+            //     ascensor.BuscarProximoDestino();
         }
     }
 
