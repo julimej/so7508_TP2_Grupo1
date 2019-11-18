@@ -165,9 +165,37 @@ void Ascensor::SubirPasajeros()
     }
 
     cout << "Ya subieron todos los pasajeros posibles." << endl;
+    
+    switch (pisoActual)
+    {
+        case 1:
+            copy(begin(pasajerosQueSeQuedan), end(pasajerosQueSeQuedan), begin(edificio->pasajerosPiso1));
+            edificio->cantPasajerosPiso1 = cantPasajerosQueSeQuedan;
+            break;
 
-    pasajerosPisoActual = pasajerosQueSeQuedan;
-    cantidadPasajerosPisoActual = cantPasajerosQueSeQuedan;
+        case 2:
+            copy(begin(pasajerosQueSeQuedan), end(pasajerosQueSeQuedan), begin(edificio->pasajerosPiso2));
+            edificio->cantPasajerosPiso2 = cantPasajerosQueSeQuedan;
+            break;
+
+        case 3:
+            copy(begin(pasajerosQueSeQuedan), end(pasajerosQueSeQuedan), begin(edificio->pasajerosPiso3));
+            edificio->cantPasajerosPiso3 = cantPasajerosQueSeQuedan;
+            break;
+
+        case 4:
+            copy(begin(pasajerosQueSeQuedan), end(pasajerosQueSeQuedan), begin(edificio->pasajerosPiso4));
+            edificio->cantPasajerosPiso4 = cantPasajerosQueSeQuedan;
+            break;
+
+        case 5:
+            copy(begin(pasajerosQueSeQuedan), end(pasajerosQueSeQuedan), begin(edificio->pasajerosPiso5));
+            edificio->cantPasajerosPiso5 = cantPasajerosQueSeQuedan;
+            break;
+        
+        default:
+            break;
+    }
 }
 
 int Ascensor::CapacidadActual()
@@ -244,6 +272,11 @@ void Ascensor::BuscarProximoDestino()
 
     if (!EstaSubiendo() && LlegoADestino())
         BuscarProximoDestinoEnPisoInferior();
+
+    if (LlegoADestino())
+        cout << "No hay más pasajeros esperando el ascensor." << endl;
+    else
+        cout << "Hay un pasajero esperando en el piso " << pisoDestino << endl;
 }
 
 void Ascensor::BuscarProximoDestinoEnPiso(int piso)
@@ -368,8 +401,8 @@ int main(int argc, char * argv[])
             ascensor.SubirPasajeros();
             sleep(2);
 
-            // if (ascensor.LlegoADestino())
-            //     ascensor.BuscarProximoDestino();
+            if (ascensor.LlegoADestino())
+                ascensor.BuscarProximoDestino();
         }
     }
 
