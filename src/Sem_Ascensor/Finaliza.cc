@@ -11,6 +11,7 @@ int main(){
     sv_sem sem_leer_pasajero(SEM_LECTURA_PASAJERO);
     Mensaje * msj;
     sv_shm area(AREA);
+    msj=reinterpret_cast<Mensaje *> (area.map(BUFSIZ));
     msj->continua_corriendo = false;
     sem_llamado.post();
     return 0;
